@@ -3,5 +3,5 @@
  :logging {:level :debug
            :nss [io.netty hexagram30]}
  :ssh {}
- :httpd {}
+ :httpd {:port 5099}
  :database {}}
