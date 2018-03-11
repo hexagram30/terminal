@@ -2,7 +2,8 @@
   (:require
     [clojure.string :as string]
     [hexagram30.shell.parser :as parser]
-    [hexagram30.shell.core :as shell])
+    [hexagram30.shell.core :as shell]
+    [taoensso.timbre :as log])
   (:import
     (io.netty.channel ChannelFuture
                       ChannelFutureListener
@@ -23,6 +24,7 @@
 
 (defn disconnect
   [future]
+  (log/debug "Connection closing ...")
   (.addListener future ChannelFutureListener/CLOSE))
 
 (defn -init
@@ -31,6 +33,7 @@
 
 (defn -channelActive
   [this ^ChannelHandlerContext ctx]
+  (log/debug "Connection opening ...")
   (.write ctx (shell/banner (get-shell this)))
   (.flush ctx))
 
