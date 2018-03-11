@@ -1,0 +1,7 @@
+{:telnet {:port 8023}
+ :ssl? false
+ :logging {:level :debug
+           :nss [io.netty hexagram30]}
+ :ssh {}
+ :httpd {}
+ :database {}}

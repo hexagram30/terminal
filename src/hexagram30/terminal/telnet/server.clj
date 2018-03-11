@@ -1,6 +1,7 @@
 (ns hexagram30.terminal.telnet.server
   (:require
-    [clojusc.twig :as logger])
+    [clojusc.twig :as logger]
+    [hexagram30.terminal.config :as config])
   (:import
     (hexagram30.terminal.telnet.initializer TelnetServerInitializer)
     (io.netty.bootstrap ServerBootstrap)
@@ -45,11 +46,12 @@
 
 (defn -main
   ([]
-   (-main (Integer/parseInt (or (System/getProperty "port") "8023"))))
+   (-main (get-in (config/data) [:telnet :port])))
   ([port]
-   (-main port (not (nil? (System/getProperty "ssl")))))
+   (-main port (:ssl? (config/data))))
   ([port ssl?]
-   (logger/set-level! '[io.netty hexagram30] :debug)
+   (logger/set-level! (get-in (config/data) [:logging :nss])
+                      (get-in (config/data) [:logging :level]))
    (let [ssl-context (build-ssl-context ssl?)
          boss-group (new NioEventLoopGroup 1)
          worker-group (new NioEventLoopGroup)]
