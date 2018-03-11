@@ -48,11 +48,10 @@
         (.shutdownGracefully worker-group))))))
 
 (defn -main
-  ([]
-   (-main (get-in (config/data) [:telnet :port])))
-  ([port]
-   (-main port (:ssl? (config/data))))
-  ([port ssl?]
-   (logger/set-level! (get-in (config/data) [:logging :nss])
-                      (get-in (config/data) [:logging :level]))
-   (telnet port ssl?)))
+  []
+  (let [cfg (config/data)
+        port (get-in cfg [:telnet :port])
+        ssl? (:ssl? cfg)]
+    (logger/set-level! (get-in cfg [:logging :nss])
+                       (get-in cfg [:logging :level]))
+    (telnet port ssl?)))
