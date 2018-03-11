@@ -1,4 +1,4 @@
-(ns hexagram30.telnet.handler
+(ns hexagram30.terminal.telnet.handler
   (:require
     [clojure.string :as string]
     [hexagram30.shell.parser :as parser]
@@ -12,7 +12,7 @@
 
 (gen-class
     :name #^{io.netty.channel.ChannelHandler$Sharable true}
-          hexagram30.telnet.handler.TelnetServerHandler
+          hexagram30.terminal.telnet.handler.TelnetServerHandler
     :extends io.netty.channel.SimpleChannelInboundHandler
     :state state
     :init init)

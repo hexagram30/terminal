@@ -14,11 +14,11 @@
     :test {
       :plugins [[lein-ltest "0.3.0"]]}
     :ubercompile {
-      :aot [hexagram30.telnet.handler
-            hexagram30.telnet.initializer
-            hexagram30.telnet.server]}
+      :aot [hexagram30.terminal.telnet.handler
+            hexagram30.terminal.telnet.initializer
+            hexagram30.terminal.telnet.server]}
     :telnet {
-      :main hexagram30.telnet.server.TelnetServer}
+      :main hexagram30.terminal.telnet.server.TelnetServer}
     :secure {
       :jvm-opts ["-Dssl=true"]}}
   :aliases {

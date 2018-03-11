@@ -1,8 +1,8 @@
-(ns hexagram30.telnet.server
+(ns hexagram30.terminal.telnet.server
   (:require
     [clojusc.twig :as logger])
   (:import
-    (hexagram30.telnet.initializer TelnetServerInitializer)
+    (hexagram30.terminal.telnet.initializer TelnetServerInitializer)
     (io.netty.bootstrap ServerBootstrap)
     (io.netty.channel EventLoopGroup)
     (io.netty.channel.nio NioEventLoopGroup)
@@ -13,7 +13,7 @@
     (java.net InetAddress)
     (java.util Date))
   (:gen-class
-    :name hexagram30.telnet.server.TelnetServer))
+    :name hexagram30.terminal.telnet.server.TelnetServer))
 
 (defn build-ssl-context
   [ssl?]
