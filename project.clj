@@ -6,6 +6,7 @@
     :url "http://www.apache.org/licenses/LICENSE-2.0"}
   :dependencies [
     [clojusc/twig "0.3.2"]
+    [hexagram30/common "0.1.0-SNAPSHOT"]
     [hexagram30/shell "0.1.0-SNAPSHOT"]
     [io.netty/netty-handler "4.1.22.Final"]
     [io.netty/netty-transport "4.1.22.Final"]
@@ -18,12 +19,9 @@
             hexagram30.terminal.telnet.initializer
             hexagram30.terminal.telnet.server]}
     :telnet {
-      :main hexagram30.terminal.telnet.server.TelnetServer}
-    :secure {
-      :jvm-opts ["-Dssl=true"]}}
+      :main hexagram30.terminal.telnet.server.TelnetServer}}
   :aliases {
     "compile" ["do"
       ["clean"]
       ["with-profile" "+ubercompile" "compile"]]
-    "telnet-server" ["with-profile" "+telnet" "run"]
-    "ssl-telnet-server" ["with-profile" "+telnet,+secure" "run"]})
+    "telnet-server" ["with-profile" "+telnet" "run"]})
