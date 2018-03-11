@@ -1,4 +1,6 @@
 (ns hexagram30.telnet.server
+  (:require
+    [clojusc.twig :as logger])
   (:import
     (hexagram30.telnet.initializer TelnetServerInitializer)
     (io.netty.bootstrap ServerBootstrap)
@@ -18,9 +20,28 @@
   (let [ssc (new SelfSignedCertificate)
         cert (.certificate ssc)
         private-key (.privateKey ssc)]
-    (if ssl?
-      (.build (SslContextBuilder/forServer cert private-key))
-      nil)))
+    (when ssl?
+      (.build (SslContextBuilder/forServer cert private-key)))))
+
+(defn telnet
+  [port ssl-context boss-group worker-group]
+  (try
+   (let [boot (new ServerBootstrap)]
+    (-> boot
+        (.group boss-group worker-group)
+        (.channel NioServerSocketChannel)
+        (.handler (new LoggingHandler LogLevel/DEBUG))
+        (.childHandler (new TelnetServerInitializer ssl-context)))
+    (-> boot
+        (.bind port)
+        (.sync)
+        (.channel)
+        (.closeFuture)
+        (.sync)))
+   (finally
+    (do
+      (.shutdownGracefully boss-group)
+      (.shutdownGracefully worker-group)))))
 
 (defn -main
   ([]
@@ -28,23 +49,8 @@
   ([port]
    (-main port (not (nil? (System/getProperty "ssl")))))
   ([port ssl?]
+   (logger/set-level! '[io.netty hexagram30] :debug)
    (let [ssl-context (build-ssl-context ssl?)
          boss-group (new NioEventLoopGroup 1)
          worker-group (new NioEventLoopGroup)]
-     (try
-       (let [boot (new ServerBootstrap)]
-        (-> boot
-            (.group boss-group worker-group)
-            (.channel NioServerSocketChannel)
-            (.handler (new LoggingHandler LogLevel/INFO))
-            (.childHandler (new TelnetServerInitializer ssl-context)))
-        (-> boot
-            (.bind port)
-            (.sync)
-            (.channel)
-            (.closeFuture)
-            (.sync)))
-       (finally
-        (do
-          (.shutdownGracefully boss-group)
-          (.shutdownGracefully worker-group)))))))
+     (telnet port ssl-context boss-group worker-group))))

@@ -12,26 +12,20 @@
     :extends io.netty.channel.ChannelInitializer
     :constructors {[Object] []}
     :init init
-    :post-init set-ssl-context
-    ; :methods [[^Override
-    ;            initChannel
-    ;            [io.netty.channel.socket.SocketChannel] void]]
-               ))
+    :state state))
 
-(defn -set-ssl-context
-  [this ssl-context]
-  ;(set! (.sslCtx this) ssl-context)
-  )
+(defn get-ssl-context
+  [this]
+  (:ssl-context (.state this)))
 
 (defn -init
-  [_ssl-context]
-  [[] nil])
+  [ssl-context]
+  [[] {:ssl-context ssl-context}])
 
 (defn -initChannel
   [this ch]
   (let [pipeline (.pipeline ch)
-        ssl-context nil;(.sslCtx this)
-        ]
+        ssl-context (get-ssl-context this)]
     (when-not (nil? ssl-context)
       (.addLast pipeline
                 (.newHandler ssl-context (.alloc ch))))
