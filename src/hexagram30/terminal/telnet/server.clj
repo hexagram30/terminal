@@ -1,7 +1,8 @@
 (ns hexagram30.terminal.telnet.server
   (:require
     [clojusc.twig :as logger]
-    [hexagram30.terminal.config :as config])
+    [hexagram30.terminal.config :as config]
+    [taoensso.timbre :as log])
   (:import
     (hexagram30.terminal.telnet.initializer TelnetServerInitializer)
     (io.netty.bootstrap ServerBootstrap)
@@ -26,11 +27,13 @@
 
 (defn init
   []
+  (log/debug "Initializing telnet event loops ...")
   {:boss-group (new NioEventLoopGroup 1)
    :worker-group (new NioEventLoopGroup)})
 
-(defn start
+(defn boot
   [event-loops port ssl?]
+  (log/debug "Booting telnet server ...")
   (let [ssl-context (build-ssl-context ssl?)
         {:keys [boss-group worker-group]} event-loops
         boot (new ServerBootstrap)]
@@ -44,10 +47,16 @@
         (.sync)
         (.channel)
         (.closeFuture)
-        (.sync))))
+        (.sync))
+    (log/debug "Joining current thread ...")))
+
+(defn start
+  [event-loops port ssl?]
+  (future (boot event-loops port ssl?)))
 
 (defn stop
   [{:keys [boss-group worker-group]}]
+  (log/debug "Attempting graceful shutdown of telnet server ....")
   (.shutdownGracefully boss-group)
   (.shutdownGracefully worker-group))
 
@@ -61,5 +70,6 @@
                        (get-in cfg [:logging :level]))
     (try
       (start event-loops port ssl?)
+      (.join (Thread/currentThread))
       (finally
         (stop event-loops)))))
