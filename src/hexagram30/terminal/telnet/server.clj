@@ -24,34 +24,42 @@
     (when ssl?
       (.build (SslContextBuilder/forServer cert private-key)))))
 
-(defn telnet
-  [port ssl?]
+(defn init
+  []
+  {:boss-group (new NioEventLoopGroup 1)
+   :worker-group (new NioEventLoopGroup)})
+
+(defn start
+  [event-loops port ssl?]
   (let [ssl-context (build-ssl-context ssl?)
-        boss-group (new NioEventLoopGroup 1)
-        worker-group (new NioEventLoopGroup)]
-    (try
-     (let [boot (new ServerBootstrap)]
-      (-> boot
-          (.group boss-group worker-group)
-          (.channel NioServerSocketChannel)
-          (.handler (new LoggingHandler LogLevel/DEBUG))
-          (.childHandler (new TelnetServerInitializer ssl-context)))
-      (-> boot
-          (.bind port)
-          (.sync)
-          (.channel)
-          (.closeFuture)
-          (.sync)))
-     (finally
-      (do
-        (.shutdownGracefully boss-group)
-        (.shutdownGracefully worker-group))))))
+        {:keys [boss-group worker-group]} event-loops
+        boot (new ServerBootstrap)]
+    (-> boot
+        (.group boss-group worker-group)
+        (.channel NioServerSocketChannel)
+        (.handler (new LoggingHandler LogLevel/DEBUG))
+        (.childHandler (new TelnetServerInitializer ssl-context)))
+    (-> boot
+        (.bind port)
+        (.sync)
+        (.channel)
+        (.closeFuture)
+        (.sync))))
+
+(defn stop
+  [{:keys [boss-group worker-group]}]
+  (.shutdownGracefully boss-group)
+  (.shutdownGracefully worker-group))
 
 (defn -main
   []
   (let [cfg (config/data)
         port (get-in cfg [:telnet :port])
-        ssl? (:ssl? cfg)]
+        ssl? (:ssl? cfg)
+        event-loops (init)]
     (logger/set-level! (get-in cfg [:logging :nss])
                        (get-in cfg [:logging :level]))
-    (telnet port ssl?)))
+    (try
+      (start event-loops port ssl?)
+      (finally
+        (stop event-loops)))))
