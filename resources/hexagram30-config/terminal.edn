@@ -1,5 +1,5 @@
 {:telnet {:port 8023}
  :ssl? false
  :logging {:level :debug
-           :nss [io.netty hexagram30]}
+           :nss [io.netty hxgm30]}
  :ssh {}}
