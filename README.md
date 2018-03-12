@@ -13,7 +13,7 @@ $ lein start-telnet
 ```
 
 For use as part of a component-based system, see
-[hexagram30.mush.components.terminal][comp-term].
+[hxgm30.mush.components.terminal][comp-term].
 
 
 ## License

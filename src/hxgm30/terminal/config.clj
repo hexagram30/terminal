@@ -1,6 +1,6 @@
-(ns hexagram30.terminal.config
+(ns hxgm30.terminal.config
   (:require
-   [hexagram30.common.file :as common]))
+   [hxgm30.common.file :as common]))
 
 (def config-file "hexagram30-config/terminal.edn")
 

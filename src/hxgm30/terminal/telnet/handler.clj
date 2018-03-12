@@ -1,8 +1,8 @@
-(ns hexagram30.terminal.telnet.handler
+(ns hxgm30.terminal.telnet.handler
   (:require
     [clojure.string :as string]
-    [hexagram30.shell.parser :as parser]
-    [hexagram30.shell.core :as shell]
+    [hxgm30.shell.parser :as parser]
+    [hxgm30.shell.core :as shell]
     [taoensso.timbre :as log])
   (:import
     (io.netty.channel ChannelFuture
@@ -13,7 +13,7 @@
 
 (gen-class
     :name #^{io.netty.channel.ChannelHandler$Sharable true}
-          hexagram30.terminal.telnet.handler.TelnetServerHandler
+          hxgm30.terminal.telnet.handler.TelnetServerHandler
     :extends io.netty.channel.SimpleChannelInboundHandler
     :state state
     :init init)

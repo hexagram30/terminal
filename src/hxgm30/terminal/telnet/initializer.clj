@@ -1,14 +1,14 @@
-(ns hexagram30.terminal.telnet.initializer
+(ns hxgm30.terminal.telnet.initializer
   (:require
     [clojure.string :as string])
   (:import
-    (hexagram30.terminal.telnet.handler TelnetServerHandler)
+    (hxgm30.terminal.telnet.handler TelnetServerHandler)
     (io.netty.channel.socket SocketChannel)
     (io.netty.handler.codec DelimiterBasedFrameDecoder Delimiters)
     (io.netty.handler.codec.string StringDecoder StringEncoder)
     (io.netty.handler.ssl SslContext))
   (:gen-class
-    :name hexagram30.terminal.telnet.initializer.TelnetServerInitializer
+    :name hxgm30.terminal.telnet.initializer.TelnetServerInitializer
     :extends io.netty.channel.ChannelInitializer
     :constructors {[Object] []}
     :init init
