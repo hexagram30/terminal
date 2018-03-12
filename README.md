@@ -12,8 +12,8 @@ Stand-alone:
 $ lein start-telnet
 ```
 
-For use as part of a component-based systems, see
-[hexagram30.mush.components.terminal](XXX).
+For use as part of a component-based system, see
+[hexagram30.mush.components.terminal][comp-term].
 
 
 ## License
@@ -27,3 +27,4 @@ Apache License, Version 2.0
 
 [logo]: https://raw.githubusercontent.com/hexagram30/resources/master/branding/logo/h30-logo-1-long-with-text-x688.png
 [logo-large]: https://raw.githubusercontent.com/hexagram30/resources/master/branding/logo/h30-logo-1-long-with-text-x3440.png
+[comp-term]: https://github.com/hexagram30/hexagramMUSH/blob/master/src/hexagram30/mush/components/terminal.clj
