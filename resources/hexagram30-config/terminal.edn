@@ -1,5 +1,6 @@
-{:telnet {:port 8023}
- :ssl? false
+{:telnet {:port 1130
+          :ssl {:enabled? true
+                :fqdn "hexagram30.mush"
+                :pkey-bits 4096}}
  :logging {:level :debug
-           :nss [io.netty hxgm30]}
- :ssh {}}
+           :nss [io.netty hxgm30]}}

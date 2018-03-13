@@ -18,12 +18,13 @@
       :plugins [[lein-ltest "0.3.0"]]}
     :ubercompile {
       :aot [hxgm30.terminal.telnet.handler
-            hxgm30.terminal.telnet.initializer
-            hxgm30.terminal.telnet.server]}
+            hxgm30.terminal.telnet.initializer]}
     :telnet {
-      :main hxgm30.terminal.telnet.server.TelnetServer}}
+      :main hxgm30.terminal.telnet.server}}
   :aliases {
-    "compile" ["do"
+    "ubercompile" ["do"
       ["clean"]
       ["with-profile" "+ubercompile" "compile"]]
-    "telnet-server" ["with-profile" "+telnet" "run"]})
+    "telnet-server" ["do"
+      ["ubercompile"]
+      ["with-profile" "+telnet" "run"]]})

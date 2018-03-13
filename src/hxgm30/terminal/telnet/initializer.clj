@@ -25,8 +25,9 @@
 (defn -initChannel
   [this ch]
   (let [pipeline (.pipeline ch)
-        ssl-context (get-ssl-context this)]
-    (when-not (nil? ssl-context)
+        ssl-context (get-ssl-context this)
+        ssl? (not (nil? ssl-context))]
+    (when ssl?
       (.addLast pipeline
                 (.newHandler ssl-context (.alloc ch))))
     (.addLast pipeline
@@ -36,4 +37,4 @@
     (.addLast pipeline
               (new StringEncoder))
     (.addLast pipeline
-              (new TelnetServerHandler))))
+              (new TelnetServerHandler ssl?))))

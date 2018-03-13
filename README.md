@@ -7,9 +7,26 @@
 
 ## Usage
 
-Stand-alone:
+Stand-alone telnet server:
 ```
 $ lein start-telnet
+```
+
+If you wish to run the server with SSL, update the configuration to include
+SSL data, e.g:
+
+```edn
+{:telnet {:port 1130
+          :ssl {:enabled? true
+                :fqdn "hexagram30.mush"
+                :pkey-bits 4096}}
+ ...}
+```
+
+Once stated with SSL enabled, use an SSL telnet client to connect, e.g.:
+
+```
+telnet-ssl -z ssl localhost 1130
 ```
 
 For use as part of a component-based system, see
