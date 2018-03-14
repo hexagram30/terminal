@@ -14,11 +14,11 @@
   :plugins [
     [venantius/ultra "0.5.2"]]
   :profiles {
-    :test {
-      :plugins [[lein-ltest "0.3.0"]]}
     :ubercompile {
       :aot [hxgm30.terminal.telnet.handler
             hxgm30.terminal.telnet.initializer]}
+    :test {
+      :plugins [[lein-ltest "0.3.0"]]}
     :telnet {
       :main hxgm30.terminal.telnet.server}}
   :aliases {

@@ -33,7 +33,7 @@
   {:boss-group (new NioEventLoopGroup 1)
    :worker-group (new NioEventLoopGroup)})
 
-(defn boot
+(defn bootstrap
   [event-loops port ssl-config]
   (log/debug "Booting telnet server ...")
   (let [ssl-context (build-ssl-context ssl-config)
@@ -54,7 +54,9 @@
 
 (defn start
   [event-loops port ssl-config]
-  (future (boot event-loops port ssl-config)))
+  (-> event-loops
+      (bootstrap port ssl-config)
+      (future)))
 
 (defn stop
   [{:keys [boss-group worker-group]}]

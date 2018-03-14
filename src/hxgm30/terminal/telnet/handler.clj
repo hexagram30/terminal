@@ -34,7 +34,7 @@
 
 (defn -init
   [ssl?]
-  [[] {:shell (shell/create-shell :demo {:disconnect-handler disconnect})
+  [[] {:shell (shell/create-shell :login {:disconnect-handler disconnect})
        :ssl? ssl?}])
 
 (defn -channelActive
@@ -51,6 +51,8 @@
   [this ^ChannelHandlerContext ctx request]
   (let [shell (get-shell this)
         {:keys [response message]} (shell/handle-request shell request)
+        _ (log/debug "response:" response)
+        _ (log/debug "message:" message)
         future (.write ctx message)]
     (shell/handle-disconnect shell response future)))
 
