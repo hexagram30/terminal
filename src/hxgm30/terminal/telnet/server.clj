@@ -28,10 +28,12 @@
       (.build (SslContextBuilder/forServer cert private-key)))))
 
 (defn init
-  [_cfg]
-  (log/debug "Initializing telnet event loops ...")
-  {:boss-group (new NioEventLoopGroup 1)
-   :worker-group (new NioEventLoopGroup)})
+  ([]
+    (init {}))
+  ([_cfg]
+    (log/debug "Initializing telnet event loops ...")
+    {:boss-group (new NioEventLoopGroup 1)
+     :worker-group (new NioEventLoopGroup)}))
 
 (defn bootstrap
   [event-loops port ssl-config]
