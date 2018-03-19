@@ -1,7 +1,6 @@
 (ns hxgm30.terminal.telnet.handler
   (:require
     [clojure.string :as string]
-    [hxgm30.shell.parser :as parser]
     [hxgm30.shell.core :as shell]
     [taoensso.timbre :as log])
   (:import
