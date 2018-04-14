@@ -1,6 +1,10 @@
-{:telnet {:port 1130
-          :ssl {:enabled? true
-                :fqdn "hexagram30.mush"
-                :pkey-bits 4096}}
- :logging {:level :debug
-           :nss [io.netty hxgm30]}}
+{:telnet {
+   :port 1123}
+ :telnet-ssl {
+   :port 1122
+   :key-gen {
+     :fqdn "hexagram30.mush"
+     :pkey-bits 4096}}
+ :logging {
+   :level :debug
+   :nss [io.netty hxgm30]}}

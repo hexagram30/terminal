@@ -7,30 +7,36 @@
 
 ## Usage
 
-Stand-alone telnet server:
+Start up the terminal project's components (including an SSL/encrypted Telnet
+server and a regular, unencrypted Telnet server):
 ```
-$ lein start-telnet
-```
-
-If you wish to run the server with SSL, update the configuration to include
-SSL data, e.g:
-
-```edn
-{:telnet {:port 1130
-          :ssl {:enabled? true
-                :fqdn "hexagram30.mush"
-                :pkey-bits 4096}}
- ...}
+$ lein start
 ```
 
-Once stated with SSL enabled, use an SSL telnet client to connect, e.g.:
+
+To connect to the regular server, you may use any MUSH/MUD client or `telnet`
+itself, e.g.:
 
 ```
-telnet-ssl -z ssl localhost 1130
+telnet localhost 1123
 ```
 
-For use as part of a component-based system, see
-[hxgm30.mush.components.terminal][comp-term].
+To connect to the encrypted Telnet server on Debian-based Linux, you can use
+the SSL-enabled `telnet` program:
+
+```
+telnet-ssl -z ssl localhost 1122
+```
+
+For other operating systems, you can use netcat:
+
+```
+ncat --telnet --ssl -n 127.0.0.1 1122
+```
+
+For use as part of a component-based system, see `src/hxgm30/terminal/components/`.
+
+Note: SSH is not yet supported.
 
 
 ## License
