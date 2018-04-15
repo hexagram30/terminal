@@ -46,7 +46,7 @@
 
 (defn bootstrap
   [event-loops {:keys [port fqdn pkey-bits log-level]}]
-  (log/debug "Booting telnet server ...")
+  (log/debug "Bootstrapping telnet server ...")
   (let [ssl-context (build-ssl-context fqdn pkey-bits)
         {:keys [boss-group worker-group]} event-loops
         boot (new ServerBootstrap)]
@@ -60,17 +60,16 @@
         (.sync)
         (.channel)
         (.closeFuture)
-        (.sync))
-    (log/debug "Joining current thread ...")))
+        (.sync))))
 
 (defn start
   ([opts]
     (start (init) opts))
   ([event-loops opts]
-    (-> event-loops
-        (bootstrap opts)
-        (future))
-    event-loops))
+    (future
+      (-> event-loops
+          (bootstrap opts))
+    event-loops)))
 
 (defn stop
   [{:keys [boss-group worker-group]}]
