@@ -64,12 +64,13 @@
     (log/debug "Joining current thread ...")))
 
 (defn start
-  ([event-loops]
-    (start event-loops {}))
+  ([opts]
+    (start (init) opts))
   ([event-loops opts]
     (-> event-loops
         (bootstrap opts)
-        (future))))
+        (future))
+    event-loops))
 
 (defn stop
   [{:keys [boss-group worker-group]}]
