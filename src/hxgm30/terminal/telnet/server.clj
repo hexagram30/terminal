@@ -27,11 +27,11 @@
     :fatal LogLevel/ERROR))
 
 (defn build-ssl-context
-  [key-gen-cfg]
-  (when (seq key-gen-cfg)
-    (let [ssc (new SelfSignedCertificate (:fqdn key-gen-cfg)
+  [fqdn pkey-bits]
+  (when (and fqdn pkey-bits)
+    (let [ssc (new SelfSignedCertificate fqdn
                                          (new SecureRandom)
-                                         (:pkey-bits key-gen-cfg))
+                                         pkey-bits)
           cert (.certificate ssc)
           private-key (.privateKey ssc)]
       (.build (SslContextBuilder/forServer cert private-key)))))
@@ -39,15 +39,15 @@
 (defn init
   ([]
     (init {}))
-  ([_cfg]
+  ([_opts]
     (log/debug "Initializing telnet event loops ...")
     {:boss-group (new NioEventLoopGroup 1)
      :worker-group (new NioEventLoopGroup)}))
 
 (defn bootstrap
-  [event-loops port key-gen-cfg log-level]
+  [event-loops {:keys [port fqdn pkey-bits log-level]}]
   (log/debug "Booting telnet server ...")
-  (let [ssl-context (build-ssl-context key-gen-cfg)
+  (let [ssl-context (build-ssl-context fqdn pkey-bits)
         {:keys [boss-group worker-group]} event-loops
         boot (new ServerBootstrap)]
     (-> boot
@@ -64,11 +64,11 @@
     (log/debug "Joining current thread ...")))
 
 (defn start
-  ([event-loops port log-level]
-    (start event-loops port {} log-level))
-  ([event-loops port key-gen-cfg log-level]
+  ([event-loops]
+    (start event-loops {}))
+  ([event-loops opts]
     (-> event-loops
-        (bootstrap port key-gen-cfg log-level)
+        (bootstrap opts)
         (future))))
 
 (defn stop

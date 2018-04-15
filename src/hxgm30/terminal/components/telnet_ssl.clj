@@ -21,9 +21,11 @@
   [this]
   (log/info "Starting telnet-ssl component ...")
   (let [port (config/telnet-ssl-port this)
-        key-gen-cfg (config/telnet-ssl-key-gen this)
+        opts (assoc (config/telnet-ssl-key-gen this)
+                    :port port
+                    :log-level (config/log-level this))
         server (telnet/init)]
-    (telnet/start server port key-gen-cfg (config/log-level this))
+    (telnet/start server opts)
     (log/debugf "Telnet SSL server is listening on port %s" port)
     (log/debug "Started telnet-ssl component.")
     (assoc this :server server)))

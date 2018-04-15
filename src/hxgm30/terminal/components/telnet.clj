@@ -21,8 +21,10 @@
   [this]
   (log/info "Starting telnet component ...")
   (let [port (config/telnet-port this)
+        opts {:port port
+              :log-level (config/log-level this)}
         server (telnet/init)]
-    (telnet/start server port (config/log-level this))
+    (telnet/start server opts)
     (log/debugf "Telnet server is listening on port %s" port)
     (log/debug "Started telnet component.")
     (assoc this :server server)))
