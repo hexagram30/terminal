@@ -15,7 +15,7 @@
        "\u001B[35m]\u001B[33m λ\u001B[m=> "))
 
 (defproject hexagram30/terminal "0.1.0-SNAPSHOT"
-  :description "Telnet, SSL Telnet, SSH, and secure REPLs for use by hexagram30 projects"
+  :description "Terminal communications for use by hexagram30 projects"
   :url "https://github.com/hexagram30/terminal"
   :license {
     :name "Apache License, Version 2.0"
@@ -26,6 +26,8 @@
     [hexagram30/common "0.1.0-SNAPSHOT"]
     [hexagram30/shell "0.1.0-SNAPSHOT"]
     [io.netty/netty-handler "4.1.22.Final"]
+    [io.netty/netty-tcnative "2.0.8.Final"]
+    [io.netty/netty-tcnative-boringssl-static "2.0.8.Final"]
     [io.netty/netty-transport "4.1.22.Final"]
     [org.clojure/clojure "1.8.0"]]
   :plugins [
