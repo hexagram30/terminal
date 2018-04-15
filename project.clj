@@ -104,4 +104,8 @@
     "start" ["do"
       ["clean"]
       ["precompile"]
-      ["trampoline" "run"]]})
+      ["trampoline" "run"]]
+    "start-safe" ["do"
+      ["clean"]
+      ["precompile"]
+      ["run"]]})
