@@ -5,6 +5,10 @@
    :key-gen {
      :fqdn "hexagram30.mush"
      :pkey-bits 4096}}
+ :connection {
+   :threads 1
+   :worker {
+     :threads 2}}
  :logging {
    :level :debug
    :nss [io.netty hxgm30]}}

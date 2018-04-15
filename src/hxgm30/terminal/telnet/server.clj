@@ -38,11 +38,13 @@
 
 (defn init
   ([]
-    (init {}))
-  ([_opts]
+    (init {:bosses 1 :workers 1}))
+  ([{boss-threads :bosses worker-threads :workers}]
     (log/debug "Initializing telnet event loops ...")
-    {:boss-group (new NioEventLoopGroup 1)
-     :worker-group (new NioEventLoopGroup)}))
+    (log/debug "Boss threads:" boss-threads)
+    (log/debug "Worker threads:" worker-threads)
+    {:boss-group (new NioEventLoopGroup boss-threads)
+     :worker-group (new NioEventLoopGroup worker-threads)}))
 
 (defn bootstrap
   [event-loops {:keys [port fqdn pkey-bits log-level]}]
@@ -64,7 +66,7 @@
 
 (defn start
   ([opts]
-    (start (init) opts))
+    (start (init opts) opts))
   ([event-loops opts]
     (future
       (-> event-loops

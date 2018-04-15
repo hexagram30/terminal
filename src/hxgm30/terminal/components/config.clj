@@ -20,6 +20,14 @@
 ;;;   Config Component API   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defn connection-threads
+  [system]
+  (get-in (get-cfg system) [:connection :threads]))
+
+(defn connection-worker-threads
+  [system]
+  (get-in (get-cfg system) [:connection :worker :threads]))
+
 (defn telnet-port
   [system]
   (get-in (get-cfg system) [:telnet :port]))
