@@ -1,6 +1,7 @@
 (ns hxgm30.terminal.telnet.initializer
   (:require
-    [clojure.string :as string])
+    [clojure.string :as string]
+    [taoensso.timbre :as log])
   (:import
     (hxgm30.terminal.telnet.handler TelnetServerHandler)
     (io.netty.channel.socket SocketChannel)
@@ -16,14 +17,17 @@
 
 (defn get-ssl-context
   [this]
+  (log/debug "Getting SSL context ...")
   (:ssl-context (.state this)))
 
 (defn -init
   [ssl-context]
+  (log/debug "Initializing telnet ...")
   [[] {:ssl-context ssl-context}])
 
 (defn -initChannel
   [this ch]
+  (log/debug "Initializing telnet channel ...")
   (let [pipeline (.pipeline ch)
         ssl-context (get-ssl-context this)
         ssl? (not (nil? ssl-context))]
