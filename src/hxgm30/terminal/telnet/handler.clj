@@ -31,12 +31,7 @@
   (log/debug "Connection closing ...")
   (.addListener future ChannelFutureListener/CLOSE))
 
-(defn -init
-  [ssl?]
-  [[] {:shell (shell/create-shell :login {:disconnect-handler disconnect})
-       :ssl? ssl?}])
-
-(defn -channelActive
+(defn connected
   [this ^ChannelHandlerContext ctx]
   (log/debug "Connection opening ...")
   (when (ssl? this)
@@ -44,9 +39,7 @@
   (.write ctx (shell/banner (get-shell this)))
   (.flush ctx))
 
-(defn -channelRead0
-  ;; XXX Once we move to netty 5.0, we will need to rename this function
-  ;;     to -messageReceived.
+(defn message-received
   [this ^ChannelHandlerContext ctx request]
   (let [shell (get-shell this)
         {:keys [response message]} (shell/handle-request shell request)
@@ -54,6 +47,21 @@
         _ (log/debug "message:" message)
         future (.write ctx message)]
     (shell/handle-disconnect shell response future)))
+
+(defn -init
+  [ssl?]
+  [[] {:shell (shell/create-shell :login {:disconnect-handler disconnect})
+       :ssl? ssl?}])
+
+(defn -channelActive
+  [this ^ChannelHandlerContext ctx]
+  (connected this ctx))
+
+(defn -channelRead0
+  ;; XXX Once we move to netty 5.0, we will need to rename this function
+  ;;     to -messageReceived.
+  [this ^ChannelHandlerContext ctx request]
+  (message-received this ctx request))
 
 (defn -channelReadComplete
   [this ^ChannelHandlerContext ctx]
