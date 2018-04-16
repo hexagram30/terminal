@@ -46,7 +46,7 @@
 
 (defn -channelRead0
   ;; XXX Once we move to netty 5.0, we will need to rename this function
-  ;;     to messageReceived.
+  ;;     to -messageReceived.
   [this ^ChannelHandlerContext ctx request]
   (let [shell (get-shell this)
         {:keys [response message]} (shell/handle-request shell request)

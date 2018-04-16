@@ -25,10 +25,10 @@
     [clojusc/twig "0.3.2"]
     [hexagram30/common "0.1.0-SNAPSHOT"]
     [hexagram30/shell "0.1.0-SNAPSHOT"]
-    [io.netty/netty-handler "4.1.22.Final"]
+    [io.netty/netty-handler "4.1.23.Final"]
     [io.netty/netty-tcnative "2.0.8.Final"]
     [io.netty/netty-tcnative-boringssl-static "2.0.8.Final"]
-    [io.netty/netty-transport "4.1.22.Final"]
+    [io.netty/netty-transport "4.1.23.Final"]
     [org.clojure/clojure "1.8.0"]]
   :plugins [
     [venantius/ultra "0.5.2"]]
