@@ -46,7 +46,8 @@
         _ (log/debug "response:" response)
         _ (log/debug "message:" message)
         future (.write ctx message)]
-    (shell/handle-disconnect shell response future)))
+    (shell/handle-disconnect shell response future)
+    (.flush ctx)))
 
 (defn -init
   [ssl?]
