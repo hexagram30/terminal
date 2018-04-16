@@ -9,6 +9,7 @@
     [com.stuartsierra.component :as component]
     [hxgm30.terminal.components.config :as config]
     [hxgm30.terminal.components.core]
+    [hxgm30.terminal.util.networkless :as networkless]
     [taoensso.timbre :as log]
     [trifl.java :refer [show-methods]])
   (:import
