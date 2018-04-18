@@ -87,7 +87,7 @@ Apache License, Version 2.0
 
 <!-- Named page links below: /-->
 
-[logo]: https://raw.githubusercontent.com/hexagram30/resources/master/branding/logo/h30-logo-1-long-with-text-x688.png
-[logo-large]: https://raw.githubusercontent.com/hexagram30/resources/master/branding/logo/h30-logo-1-long-with-text-x3440.png
+[logo]: https://raw.githubusercontent.com/hexagram30/resources/master/branding/logo/h30-logo-2-long-with-text-x695.png
+[logo-large]: https://raw.githubusercontent.com/hexagram30/resources/master/branding/logo/h30-logo-2-long-with-text-x3440.png
 [comp-term]: https://github.com/hexagram30/hexagramMUSH/blob/master/src/hexagram30/mush/components/terminal.clj
 [netty]: https://netty.io
