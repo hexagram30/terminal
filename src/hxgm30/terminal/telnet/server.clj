@@ -69,9 +69,8 @@
     (start (init opts) opts))
   ([event-loops opts]
     (future
-      (-> event-loops
-          (bootstrap opts))
-    event-loops)))
+      (bootstrap event-loops opts)
+      event-loops)))
 
 (defn stop
   [{:keys [boss-group worker-group]}]

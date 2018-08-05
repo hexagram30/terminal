@@ -43,8 +43,7 @@
 
 (defn initialize-bare-bones
   []
-  (-> (config/build-config)
-      component/map->SystemMap))
+  (component/map->SystemMap (config/build-config)))
 
 (defn initialize-with-terminal
   []
