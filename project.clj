@@ -22,15 +22,15 @@
     :url "http://www.apache.org/licenses/LICENSE-2.0"}
   :dependencies [
     [clojusc/dev-system "0.1.0"]
-    [clojusc/trifl "0.2.0"]
-    [clojusc/twig "0.3.2"]
+    [clojusc/trifl "0.3.0"]
+    [clojusc/twig "0.3.3"]
     [hexagram30/common "0.1.0-SNAPSHOT"]
     [hexagram30/shell "0.1.0-SNAPSHOT"]
-    [io.netty/netty-handler "4.1.23.Final"]
-    [io.netty/netty-tcnative "2.0.8.Final"]
-    [io.netty/netty-tcnative-boringssl-static "2.0.8.Final"]
-    [io.netty/netty-transport "4.1.23.Final"]
-    [org.clojure/clojure "1.8.0"]]
+    [io.netty/netty-handler "4.1.28.Final"]
+    [io.netty/netty-tcnative "2.0.12.Final"]
+    [io.netty/netty-tcnative-boringssl-static "2.0.12.Final"]
+    [io.netty/netty-transport "4.1.28.Final"]
+    [org.clojure/clojure "1.9.0"]]
   :plugins [
     [venantius/ultra "0.5.2"]]
   :main hxgm30.terminal.core
@@ -61,7 +61,7 @@
       :source-paths ^:replace ["src"]
       :test-paths ^:replace []
       :plugins [
-        [jonase/eastwood "0.2.5"]
+        [jonase/eastwood "0.2.9"]
         [lein-ancient "0.6.15"]
         [lein-bikeshed "0.5.1"]
         [lein-kibit "0.1.6"]
@@ -94,7 +94,7 @@
       ["ltest"]]
     "build" ["do"
       ["clean"]
-      ["check-vers"]
+      ; ["check-vers"]
       ["lint"]
       ["ltest" ":all"]
       ["uberjar"]]
