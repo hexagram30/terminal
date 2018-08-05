@@ -39,7 +39,8 @@
       :aot [clojure.tools.logging.impl
             hxgm30.terminal.telnet.handler
             hxgm30.terminal.telnet.initializer
-            hxgm30.terminal.telnet.server]}
+            hxgm30.terminal.telnet.server
+            hxgm30.terminal.core]}
     :ubercompile {
       :aot :all}
     :dev {
@@ -96,21 +97,18 @@
       ["clean"]
       ; ["check-vers"]
       ["lint"]
+      ["precompile"]
       ["ltest" ":all"]
       ["uberjar"]]
-    "ubercompile" ["do"
-      ["clean"]
-      ["precompile"]
-      ["with-profile" "+ubercompile" "compile"]]
     "install" ["do"
       ["clean"]
-      ["with-profile" "+ubercompile" "install"]]
+      ["with-profile" "+precompile" "install"]]
     "jar" ["do"
       ["clean"]
-      ["with-profile" "+ubercompile" "jar"]]
+      ["with-profile" "+precompile" "jar"]]
     "uberjar" ["do"
       ["clean"]
-      ["with-profile" "+ubercompile" "uberjar"]]
+      ["with-profile" "+precompile" "uberjar"]]
     "publish"
       ["shell" "echo" "You need to run 'resources/scripts/publish.sh'"]
     "start" ["do"
