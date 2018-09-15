@@ -23,8 +23,8 @@
   (let [port (config/telnet-port this)
         opts {:port port
               :log-level (config/log-level this)
-              :bosses (config/connection-threads this)
-              :workers (config/connection-worker-threads this)}
+              :bosses (config/terminal-connection-threads this)
+              :workers (config/terminal-connection-worker-threads this)}
         server (telnet/start opts)]
     (log/debugf "Telnet server is listening on port %s" port)
     (log/debug "Started telnet component.")

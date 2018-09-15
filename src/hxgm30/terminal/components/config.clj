@@ -20,25 +20,25 @@
 ;;;   Config Component API   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn connection-threads
+(defn terminal-connection-threads
   [system]
-  (get-in (get-cfg system) [:connection :threads]))
+  (get-in (get-cfg system) [:terminal :connection :threads]))
 
-(defn connection-worker-threads
+(defn terminal-connection-worker-threads
   [system]
-  (get-in (get-cfg system) [:connection :worker :threads]))
+  (get-in (get-cfg system) [:terminal :connection :worker :threads]))
 
 (defn telnet-port
   [system]
-  (get-in (get-cfg system) [:telnet :port]))
+  (get-in (get-cfg system) [:terminal :telnet :port]))
 
 (defn telnet-ssl-port
   [system]
-  (get-in (get-cfg system) [:telnet-ssl :port]))
+  (get-in (get-cfg system) [:terminal :telnet-ssl :port]))
 
 (defn telnet-ssl-key-gen
   [system]
-  (get-in (get-cfg system) [:telnet-ssl :key-gen]))
+  (get-in (get-cfg system) [:terminal :telnet-ssl :key-gen]))
 
 (defn log-level
   [system]
