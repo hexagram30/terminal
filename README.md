@@ -18,7 +18,7 @@ To connect to the regular server, you may use any MUSH/MUD client or `telnet`
 itself, e.g.:
 
 ```
-telnet localhost 1123
+rlwrap telnet localhost 1123
 ```
 
 To connect to the encrypted Telnet server on Debian-based Linux, you can use
@@ -31,7 +31,7 @@ telnet-ssl -z ssl localhost 1122
 For other operating systems, you can use netcat:
 
 ```
-ncat --telnet --ssl -n 127.0.0.1 1122
+rlwrap ncat --telnet --ssl -n 127.0.0.1 1122
 ```
 
 For use as part of a component-based system, see `src/hxgm30/terminal/components/`.
