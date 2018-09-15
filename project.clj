@@ -26,10 +26,10 @@
     [clojusc/twig "0.3.3"]
     [hexagram30/common "0.1.0-SNAPSHOT"]
     [hexagram30/shell "0.1.0-SNAPSHOT"]
-    [io.netty/netty-handler "4.1.28.Final"]
-    [io.netty/netty-tcnative "2.0.12.Final"]
-    [io.netty/netty-tcnative-boringssl-static "2.0.12.Final"]
-    [io.netty/netty-transport "4.1.28.Final"]
+    [io.netty/netty-handler "4.1.29.Final"]
+    [io.netty/netty-tcnative "2.0.15.Final"]
+    [io.netty/netty-tcnative-boringssl-static "2.0.15.Final"]
+    [io.netty/netty-transport "4.1.29.Final"]
     [org.clojure/clojure "1.9.0"]]
   :plugins [
     [venantius/ultra "0.5.2"]]
@@ -66,7 +66,7 @@
         [lein-ancient "0.6.15"]
         [lein-bikeshed "0.5.1"]
         [lein-kibit "0.1.6"]
-        [venantius/yagni "0.1.4"]]}
+        [venantius/yagni "0.1.6"]]}
     :test {
       :plugins [[lein-ltest "0.3.0"]]}}
   :aliases {
