@@ -25,7 +25,8 @@
               :log-level (config/log-level this)
               :bosses (config/terminal-connection-threads this)
               :workers (config/terminal-connection-worker-threads this)}
-        server (telnet/start opts)]
+        server (telnet/init)]
+    (telnet/start server opts)
     (log/debugf "Telnet server is listening on port %s" port)
     (log/debug "Started telnet component.")
     (assoc this :server server)))
@@ -33,7 +34,7 @@
 (defn stop
   [this]
   (log/info "Stopping telnet component ...")
-  (if-let [server (:server this)]
+  (when-let [server (:server this)]
     (telnet/stop server))
   (log/debug "Stopped telnet component.")
   (assoc this :server nil))

@@ -35,7 +35,7 @@
 (defn stop
   [this]
   (log/info "Stopping telnet-ssl component ...")
-  (if-let [server (:server this)]
+  (when-let [server (:server this)]
     (telnet/stop server))
   (log/debug "Stopped telnet-ssl component.")
   (assoc this :server nil))
