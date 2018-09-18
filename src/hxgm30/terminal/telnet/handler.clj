@@ -52,7 +52,7 @@
 
 (defn -init
   [ssl?]
-  [[] {:shell (shell/create-shell :entry {:disconnect-handler disconnect})
+  [[] {:shell (shell/create :entry {:disconnect-handler disconnect})
        :ssl? ssl?}])
 
 (defn -channelActive
