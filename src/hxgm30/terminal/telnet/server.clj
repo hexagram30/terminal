@@ -47,7 +47,7 @@
      :worker-group (new NioEventLoopGroup worker-threads)}))
 
 (defn bootstrap
-  [event-loops {:keys [port fqdn pkey-bits log-level]}]
+  [event-loops {:keys [port fqdn pkey-bits log-level system]}]
   (log/debug "Bootstrapping telnet server ...")
   (let [ssl-context (build-ssl-context fqdn pkey-bits)
         {:keys [boss-group worker-group]} event-loops
@@ -58,7 +58,7 @@
         (.handler (new LoggingHandler (convert-log-level log-level)))
         (.childHandler (new HexagramTelnetServerInitializer
                             {:ssl-context ssl-context
-                             :system nil})))
+                             :system system})))
     (-> boot
         (.bind port)
         (.sync)

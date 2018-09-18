@@ -25,7 +25,8 @@
                     :port port
                     :log-level (config/log-level this)
                     :bosses (config/terminal-connection-threads this)
-                    :workers (config/terminal-connection-worker-threads this))
+                    :workers (config/terminal-connection-worker-threads this)
+                    :system this)
         server (telnet/init)]
     (telnet/start server opts)
     (log/debugf "Telnet SSL server is listening on port %s" port)
