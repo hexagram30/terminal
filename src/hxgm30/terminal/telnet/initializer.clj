@@ -3,13 +3,13 @@
     [clojure.string :as string]
     [taoensso.timbre :as log])
   (:import
-    (hxgm30.terminal.telnet.handler TelnetServerHandler)
+    (hxgm30.terminal.telnet.handler HexagramTelnetServerHandler)
     (io.netty.channel.socket SocketChannel)
     (io.netty.handler.codec DelimiterBasedFrameDecoder Delimiters)
     (io.netty.handler.codec.string StringDecoder StringEncoder)
     (io.netty.handler.ssl SslContext))
   (:gen-class
-    :name hxgm30.terminal.telnet.initializer.TelnetServerInitializer
+    :name hxgm30.terminal.telnet.initializer.HexagramTelnetServerInitializer
     :extends io.netty.channel.ChannelInitializer
     :constructors {[Object] []}
     :init init
@@ -21,9 +21,10 @@
   (:ssl-context (.state this)))
 
 (defn -init
-  [ssl-context]
+  [init-data]
   (log/debug "Initializing telnet ...")
-  [[] {:ssl-context ssl-context}])
+  (log/debug "init-data: " init-data)
+  [[] init-data])
 
 (defn -initChannel
   [this ch]
@@ -41,4 +42,4 @@
     (.addLast pipeline
               (new StringEncoder))
     (.addLast pipeline
-              (new TelnetServerHandler ssl?))))
+              (new HexagramTelnetServerHandler ssl?))))

@@ -4,8 +4,10 @@
    :telnet-ssl {
      :port 1122
      :key-gen {
-       :fqdn "hexagram30.mush"
+       :fqdn "mush.hexagram30.cnbb.games"
        :pkey-bits 4096}}
+   :initialization {
+     :max-frame-length 8192}
    :connection {
      :threads 1
      :worker {

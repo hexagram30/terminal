@@ -12,7 +12,7 @@
 
 (gen-class
     :name #^{io.netty.channel.ChannelHandler$Sharable true}
-          hxgm30.terminal.telnet.handler.TelnetServerHandler
+          hxgm30.terminal.telnet.handler.HexagramTelnetServerHandler
     :extends io.netty.channel.SimpleChannelInboundHandler
     :state state
     :init init
@@ -34,24 +34,25 @@
 (defn connected
   [this ^ChannelHandlerContext ctx]
   (log/debug "Connection opening ...")
-  (when (ssl? this)
-    (.write ctx "This channel is SSL-encrypted.\r\n\r\n"))
-  (.write ctx (shell/banner (get-shell this)))
-  (.flush ctx))
+  (let [shell (get-shell this)]
+    (when (ssl? this)
+      (.write ctx "\r\nThis connection is SSL-encrypted.\r\n"))
+    (.write ctx (shell/on-connect shell))
+    (.write ctx (shell/prompt shell))
+    (.flush ctx)))
 
 (defn message-received
   [this ^ChannelHandlerContext ctx request]
   (let [shell (get-shell this)
-        {:keys [response message]} (shell/handle-request shell request)
+        response (shell/handle-request shell request)
         _ (log/debug "response:" response)
-        _ (log/debug "message:" message)
-        future (.write ctx message)]
+        future (.write ctx (str response (shell/prompt shell)))]
     (shell/handle-disconnect shell response future)
     (.flush ctx)))
 
 (defn -init
   [ssl?]
-  [[] {:shell (shell/create-shell :login {:disconnect-handler disconnect})
+  [[] {:shell (shell/create-shell :entry {:disconnect-handler disconnect})
        :ssl? ssl?}])
 
 (defn -channelActive

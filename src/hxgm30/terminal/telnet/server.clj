@@ -4,7 +4,7 @@
     [hxgm30.terminal.config :as config]
     [taoensso.timbre :as log])
   (:import
-    (hxgm30.terminal.telnet.initializer TelnetServerInitializer)
+    (hxgm30.terminal.telnet.initializer HexagramTelnetServerInitializer)
     (io.netty.bootstrap ServerBootstrap)
     (io.netty.channel EventLoopGroup)
     (io.netty.channel.nio NioEventLoopGroup)
@@ -56,7 +56,9 @@
         (.group boss-group worker-group)
         (.channel NioServerSocketChannel)
         (.handler (new LoggingHandler (convert-log-level log-level)))
-        (.childHandler (new TelnetServerInitializer ssl-context)))
+        (.childHandler (new HexagramTelnetServerInitializer
+                            {:ssl-context ssl-context
+                             :system nil})))
     (-> boot
         (.bind port)
         (.sync)
