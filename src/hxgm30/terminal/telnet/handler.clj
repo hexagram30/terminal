@@ -2,6 +2,7 @@
   (:require
     [clojure.string :as string]
     [hxgm30.terminal.components.config :as config]
+    [hxgm30.shell.components.registry :as shell-registry]
     [hxgm30.shell.core :as shell]
     [taoensso.timbre :as log])
   (:import
@@ -58,8 +59,8 @@
 (defn -init
   [{:keys [ssl? system]}]
   (log/debug "Default shell: " (config/default-shell system))
-  [[] {:shell (shell/create (config/default-shell system)
-                            {:disconnect-handler disconnect})
+  (log/debug "Loading shell from registry ...")
+  [[] {:shell (shell-registry/get-shell system (config/default-shell system))
        :ssl? ssl?
        :system system}])
 
