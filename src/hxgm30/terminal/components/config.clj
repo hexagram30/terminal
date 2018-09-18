@@ -20,6 +20,14 @@
 ;;;   Config Component API   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defn default-shell
+  [system]
+  (get-in (get-cfg system) [:shell :default]))
+
+(defn initialization-max-frame-length
+  [system]
+  (get-in (get-cfg system) [:terminal :initialization :max-frame-length]))
+
 (defn terminal-connection-threads
   [system]
   (get-in (get-cfg system) [:terminal :connection :threads]))

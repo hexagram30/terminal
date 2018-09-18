@@ -12,6 +12,8 @@
      :threads 1
      :worker {
        :threads 2}}}
+ :shell {
+   :default :entry}
  :logging {
    :level :debug
    :nss [io.netty hxgm30]}}

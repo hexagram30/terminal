@@ -1,6 +1,7 @@
 (ns hxgm30.terminal.telnet.handler
   (:require
     [clojure.string :as string]
+    [hxgm30.terminal.components.config :as config]
     [hxgm30.shell.core :as shell]
     [taoensso.timbre :as log])
   (:import
@@ -16,11 +17,15 @@
     :extends io.netty.channel.SimpleChannelInboundHandler
     :state state
     :init init
-    :constructors {[Boolean] []})
+    :constructors {[Object] []})
 
 (defn get-shell
   [this]
   (:shell (.state this)))
+
+(defn get-system
+  [this]
+  (:system (.state this)))
 
 (defn ssl?
   [this]
@@ -51,9 +56,12 @@
     (.flush ctx)))
 
 (defn -init
-  [ssl?]
-  [[] {:shell (shell/create :entry {:disconnect-handler disconnect})
-       :ssl? ssl?}])
+  [{:keys [ssl? system]}]
+  (log/debug "Default shell: " (config/default-shell system))
+  [[] {:shell (shell/create (config/default-shell system)
+                            {:disconnect-handler disconnect})
+       :ssl? ssl?
+       :system system}])
 
 (defn -channelActive
   [this ^ChannelHandlerContext ctx]

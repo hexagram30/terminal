@@ -1,6 +1,7 @@
 (ns hxgm30.terminal.telnet.initializer
   (:require
     [clojure.string :as string]
+    [hxgm30.terminal.components.config :as config]
     [taoensso.timbre :as log])
   (:import
     (hxgm30.terminal.telnet.handler HexagramTelnetServerHandler)
@@ -20,10 +21,15 @@
   (log/debug "Getting SSL context ...")
   (:ssl-context (.state this)))
 
+(defn get-system
+  [this]
+  (log/debug "Getting system state ...")
+  (:system (.state this)))
+
 (defn -init
   [init-data]
   (log/debug "Initializing telnet ...")
-  (log/debug "init-data: " init-data)
+  (log/trace "init-data: " init-data)
   [[] init-data])
 
 (defn -initChannel
@@ -31,15 +37,20 @@
   (log/debug "Initializing telnet channel ...")
   (let [pipeline (.pipeline ch)
         ssl-context (get-ssl-context this)
-        ssl? (not (nil? ssl-context))]
+        ssl? (not (nil? ssl-context))
+        system (get-system this)
+        max-frame-length (config/initialization-max-frame-length system)]
+    (log/debug "Max frame length: " max-frame-length)
     (when ssl?
       (.addLast pipeline
                 (.newHandler ssl-context (.alloc ch))))
     (.addLast pipeline
-              (new DelimiterBasedFrameDecoder 8192 (Delimiters/lineDelimiter)))
+              (new DelimiterBasedFrameDecoder
+                   max-frame-length
+                   (Delimiters/lineDelimiter)))
     (.addLast pipeline
               (new StringDecoder))
     (.addLast pipeline
               (new StringEncoder))
     (.addLast pipeline
-              (new HexagramTelnetServerHandler ssl?))))
+              (new HexagramTelnetServerHandler {:ssl? ssl? :system system}))))
