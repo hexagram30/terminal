@@ -70,7 +70,7 @@
     (if (shell/disconnect? sh cmd)
       (disconnect this ctx)
       (let [evaled (shell/evaluate sh parsed)
-            result (shell/print sh evaled)]
+            result (shell/print sh parsed evaled)]
         (log/debug "result:" result)
         (.write ctx (str result (shell/prompt sh)))))))
 
