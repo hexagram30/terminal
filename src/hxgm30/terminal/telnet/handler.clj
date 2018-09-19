@@ -20,6 +20,17 @@
     :init init
     :constructors {[Object] []})
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;   Constants   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(def ssl-notice "\r\nThis connection is SSL-encrypted.\r\n")
+(def disconnect-notice "\r\nDisconnecting ...\r\n")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;   State Accessors   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defn get-shell
   [this]
   (:shell (.state this)))
@@ -32,41 +43,54 @@
   [this]
   (:ssl? (.state this)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;   Helper Methods   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defn disconnect
-  [future]
+  [this ^ChannelHandlerContext ctx]
   (log/debug "Connection closing ...")
-  (.addListener future ChannelFutureListener/CLOSE))
+  (let [future (.write ctx disconnect-notice)]
+    (.flush ctx)
+    (.addListener future ChannelFutureListener/CLOSE)))
 
 (defn connected
   [this ^ChannelHandlerContext ctx]
   (log/debug "Connection opening ...")
-  (let [shell (get-shell this)]
+  (let [sh (get-shell this)]
     (when (ssl? this)
-      (.write ctx "\r\nThis connection is SSL-encrypted.\r\n"))
-    (.write ctx (shell/on-connect shell))
-    (.write ctx (shell/prompt shell))
-    (.flush ctx)))
+      (.write ctx ssl-notice))
+    (.write ctx (shell/on-connect sh))
+    (.write ctx (shell/prompt sh))))
 
 (defn message-received
-  [this ^ChannelHandlerContext ctx request]
-  (let [shell (get-shell this)
-        response (shell/handle-request shell request)
-        _ (log/debug "response:" response)
-        future (.write ctx (str response (shell/prompt shell)))]
-    (shell/handle-disconnect shell response future)
-    (.flush ctx)))
+  [this ^ChannelHandlerContext ctx line]
+  (let [sh (get-shell this)
+        {:keys [cmd] :as parsed} (shell/read sh line)]
+    (if (shell/disconnect? sh cmd)
+      (disconnect this ctx)
+      (let [evaled (shell/evaluate sh parsed)
+            result (shell/print sh evaled)]
+        (log/debug "result:" result)
+        (.write ctx (str result (shell/prompt sh)))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;   SimpleChannelInboundHandler Implementation   ;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn -init
   [{:keys [ssl? system]}]
-  (log/debug "Default shell: " (config/default-shell system))
-  (log/debug "Loading shell from registry ...")
-  [[] {:shell (shell-registry/get-shell system (config/default-shell system))
-       :ssl? ssl?
-       :system system}])
+  (let [shell-key (config/default-shell system)]
+    (log/debug "Default shell: " shell-key)
+    (log/debug "Loading shell from registry ...")
+    [[] {:shell (shell-registry/get-shell system shell-key)
+         :ssl? ssl?
+         :system system}]))
 
 (defn -channelActive
   [this ^ChannelHandlerContext ctx]
-  (connected this ctx))
+  (connected this ctx)
+  (.flush ctx))
 
 (defn -channelRead0
   ;; XXX Once we move to netty 5.0, we will need to rename this function
@@ -76,9 +100,11 @@
 
 (defn -channelReadComplete
   [this ^ChannelHandlerContext ctx]
+  (log/debug "Channel read completed.")
   (.flush ctx))
 
 (defn -exceptionCaught
   [this ctx cause]
   (.printStackTrace cause)
+  (log/errorf "Got exception:\n%s" cause)
   (.close ctx))
