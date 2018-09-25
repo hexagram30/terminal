@@ -71,7 +71,7 @@
       (disconnect this ctx)
       (let [evaled (shell/evaluate sh parsed)
             result (shell/print sh parsed evaled)]
-        (log/debug "result:" result)
+        (log/trace "result:" result)
         (.write ctx (str result (shell/prompt sh)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
