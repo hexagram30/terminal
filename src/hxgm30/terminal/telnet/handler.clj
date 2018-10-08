@@ -3,6 +3,7 @@
     [clojure.string :as string]
     [hxgm30.terminal.components.config :as config]
     [hxgm30.shell.components.registry :as shell-registry]
+    [hxgm30.shell.components.session :as session]
     [hxgm30.shell.core :as shell]
     [taoensso.timbre :as log])
   (:import
@@ -84,6 +85,7 @@
     (log/debug "Default shell: " shell-key)
     (log/debug "Loading shell from registry ...")
     [[] {:shell (shell-registry/get-shell system shell-key)
+         :session-id (session/create system)
          :ssl? ssl?
          :system system}]))
 
