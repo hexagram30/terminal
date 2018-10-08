@@ -32,6 +32,10 @@
 ;;;   State Accessors   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defn get-session-id
+  [this]
+  (:session-id (.state this)))
+
 (defn get-shell
   [this]
   (:shell (.state this)))
@@ -53,7 +57,9 @@
   (log/debug "Connection closing ...")
   (let [future (.write ctx disconnect-notice)]
     (.flush ctx)
-    (.addListener future ChannelFutureListener/CLOSE)))
+    (.addListener future ChannelFutureListener/CLOSE)
+    ;; XXX call session/close ... update session data with {:closed? true}
+    ))
 
 (defn connected
   [this ^ChannelHandlerContext ctx]
@@ -67,11 +73,12 @@
 (defn message-received
   [this ^ChannelHandlerContext ctx line]
   (let [sh (get-shell this)
-        {:keys [cmd] :as parsed} (shell/read sh line)]
+        sess (get-session-id this)
+        {:keys [cmd] :as parsed} (shell/read sh sess line)]
     (if (shell/disconnect? sh cmd)
       (disconnect this ctx)
-      (let [evaled (shell/evaluate sh parsed)
-            result (shell/print sh parsed evaled)]
+      (let [evaled (shell/evaluate sh sess parsed)
+            result (shell/print sh sess parsed evaled)]
         (log/trace "result:" result)
         (.write ctx (str result (shell/prompt sh)))))))
 
@@ -85,9 +92,10 @@
     (log/debug "Default shell: " shell-key)
     (log/debug "Loading shell from registry ...")
     [[] {:shell (shell-registry/get-shell system shell-key)
-         :session-id (session/create system)
+         :session-id (session/create
+                      system {:type (if ssl? :telnet-ssl :telnet)})
          :ssl? ssl?
-         :system system}]))
+         :system system}]))+
 
 (defn -channelActive
   [this ^ChannelHandlerContext ctx]
